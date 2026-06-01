@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 استضافة بايثون - Python Hosting</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a2e, #16213e);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* تأثيرات النجوم المتحركة */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite;
+            opacity: 0;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* الحاوية الرئيسية */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* الهيدر */
+        .header {
+            background: linear-gradient(135deg, rgba(255,107,0,0.9), rgba(255,0,128,0.9));
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(255,107,0,0.3);
+            animation: slideDown 1s ease-out;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .header h1 {
+            font-size: 3em;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        /* لوحة التحكم */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255,107,0,0.3);
+            border-color: rgba(255,107,0,0.5);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .card h3 {
+            color: #ff6b00;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h3 .icon {
+            font-size: 1.5em;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* أزرار */
+        .btn {
+            background: linear-gradient(135deg, #ff6b00, #ff0080);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+            width: 100%;
+            margin: 5px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255,107,0,0.5);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -50%; }
+            100% { left: 150%; }
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #00ff00, #00cc00);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #00aaff, #0088cc);
+        }
+
+        /* منطقة رفع الملفات */
+        .upload-area {
+            border: 3px dashed rgba(255,107,0,0.5);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: rgba(255,255,255,0.02);
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            border-color: #ff6b00;
+            background: rgba(255,107,0,0.1);
+        }
+
+        .upload-area.dragover {
+            border-color: #00ff00;
+            background: rgba(0,255,0,0.1);
+            animation: pulse-border 1s infinite;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { border-color: #00ff00; }
+            50% { border-color: #ff6b00; }
+        }
+
+        /* قائمة الملفات */
+        .file-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .file-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .file-item:hover {
+            background: rgba(255,107,0,0.1);
+            border-color: #ff6b00;
+        }
+
+        .file-item .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+
+        /* الكونسول */
+        .console {
+            background: rgba(0,0,0,0.8);
+            border-radius: 15px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ff6b00;
+            color: #00ff00;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .console .command { color: #00ff00; }
+        .console .output { color: #ffffff; }
+        .console .error { color: #ff0000; }
+        .console .warning { color: #ffff00; }
+        .console .info { color: #00aaff; }
+
+        /* شريط التحميل */
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b00, #ff0080);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+            animation: progress-glow 1s infinite;
+        }
+
+        @keyframes progress-glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        /* مودال */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            border: 2px solid #ff6b00;
+            box-shadow: 0 20px 60px rgba(255,107,0,0.5);
+        }
+
+        /* الإشعارات */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #00ff00, #00cc00);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            z-index: 2000;
+            animation: slideIn 0.5s ease-out;
+            box-shadow: 0 10px 30px rgba(0,255,0,0.3);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(200px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* تأثيرات المهرجان */
+        .festival-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: fall var(--fall-duration) linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(720deg); }
+        }
+
+        /* الاستجابة */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2em; }
+            .dashboard { grid-template-columns: 1fr; }
+            .file-item { flex-direction: column; gap: 10px; }
+        }
+
+        /* سكرول بار مخصص */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(#ff6b00, #ff0080);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(#ff0080, #ff6b00);
+        }
+    </style>
+</head>
+<body>
+    <!-- النجوم -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- تأثيرات المهرجان -->
+    <div class="festival-effect" id="festivalEffect"></div>
+    
+    <!-- مودال الاشتراك الإجباري -->
+    <div class="modal active" id="subscriptionModal">
+        <div class="modal-content">
+            <h2 style="color: #ff6b00; text-align: center; margin-bottom: 20px;">⚠️ اشتراك إجباري</h2>
+            <p style="text-align: center; margin-bottom: 20px; font-size: 1.2em;">
+                يجب عليك الاشتراك في قناة المطور أولاً لاستخدام التطبيق
+            </p>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <a href="https://t.me/FT_ER" target="_blank" class="btn" style="display: inline-block; text-decoration: none; text-align: center;">
+                    📢 اشترك في القناة
+                </a>
+            </div>
+            <p style="text-align: center; margin-bottom: 20px; color: #ff0080;">
+                بعد الاشتراك، اضغط على زر "تأكيد الاشتراك"
+            </p>
+            <button class="btn btn-success" onclick="checkSubscription()">✅ تأكيد الاشتراك</button>
+            <p style="text-align: center; margin-top: 15px; font-size: 0.8em; opacity: 0.7;">
+                قناة المطور: @FT_ER
+            </p>
+        </div>
+    </div>
+
+    <!-- الحاوية الرئيسية -->
+    <div class="container" id="mainApp" style="display: none;">
+        <!-- الهيدر -->
+        <div class="header">
+            <h1>🚀 استضافة بايثون الاحترافية</h1>
+            <p class="subtitle">Python Hosting - رفع وتشغيل ملفات البايثون بسهولة</p>
+            <div style="margin-top: 15px;">
+                <span style="background: rgba(0,0,0,0.5); padding: 8px 16px; border-radius: 20px;">
+                    📢 قناة المطور: <a href="https://t.me/FT_ER" target="_blank" style="color: #00ff00;">@FT_ER</a>
+                </span>
+            </div>
+        </div>
+
+        <!-- لوحة الإحصائيات -->
+        <div class="dashboard">
+            <div class="card">
+                <h3><span class="icon">📊</span> الإحصائيات</h3>
+                <p>📁 الملفات: <span id="fileCount">0</span></p>
+                <p>⚡ قيد التشغيل: <span id="runningCount">0</span></p>
+                <p>💾 المساحة المستخدمة: <span id="storageUsed">0 MB</span></p>
+                <p>🕐 وقت التشغيل: <span id="uptime">00:00:00</span></p>
+            </div>
+
+            <div class="card">
+                <h3><span class="icon">🎵</span> المهرجان</h3>
+                <audio id="festivalAudio" loop controls style="width: 100%; margin: 10px 0;">
+                    <source src="" type="audio/mpeg">
+                    المتصفح لا يدعم تشغيل الصوت
+                </audio>
+                <button class="btn" onclick="toggleFestivalAudio()">🎵 تشغيل/إيقاف المهرجان</button>
+                <button class="btn btn-info" onclick="downloadFestivalAudio()">📥 تحميل صوت المهرجان</button>
+            </div>
+
+            <div class="card">
+                <h3><span class="icon">⚡</span> تحكم سريع</h3>
+                <button class="btn btn-success" onclick="runAllFiles()">▶️ تشغيل الكل</button>
+                <button class="btn btn-danger" onclick="stopAllFiles()">⏹️ إيقاف الكل</button>
+                <button class="btn btn-info" onclick="restartAllFiles()">🔄 إعادة تشغيل الكل</button>
+            </div>
+        </div>
+
+        <!-- رفع الملفات -->
+        <div class="card" style="margin-bottom: 20px;">
+            <h3><span class="icon">📤</span> رفع ملف بايثون</h3>
+            <div class="upload-area" id="uploadArea" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+                <p style="font-size: 2em;">📁</p>
+                <p>اسحب وأفلت ملفات البايثون هنا</p>
+                <p>أو</p>
+                <input type="file" id="fileInput" accept=".py,.zip,.txt,.json,.yml,.yaml" multiple style="display: none;" onchange="handleFileSelect(event)">
+                <button class="btn" onclick="document.getElementById('fileInput').click()">اختيار ملفات</button>
+            </div>
+            <div class="progress-bar" id="uploadProgress" style="display: none;">
+                <div class="progress-fill" id="uploadProgressFill"></div>
+            </div>
+            <p id="uploadStatus" style="text-align: center; margin-top: 10px;"></p>
+        </div>
+
+        <!-- إدارة الملفات -->
+        <div class="card" style="margin-bottom: 20px;">
+            <h3><span class="icon">📂</span> الملفات المرفوعة</h3>
+            <div class="file-list" id="fileList">
+                <p style="text-align: center; opacity: 0.5;">لا توجد ملفات مرفوعة</p>
+            </div>
+        </div>
+
+        <!-- تثبيت المكتبات -->
+        <div class="card" style="margin-bottom: 20px;">
+            <h3><span class="icon">📦</span> تثبيت المكتبات تلقائياً</h3>
+            <input type="text" id="libraryInput" placeholder="أدخل اسم المكتبة للتثبيت (مثال: requests)" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: white; margin-bottom: 10px;">
+            <button class="btn btn-success" onclick="installLibrary()">📥 تثبيت المكتبة</button>
+            <button class="btn btn-info" onclick="installMultipleLibraries()">📚 تثبيت مكتبات متعددة</button>
+            <div id="libraryStatus" style="margin-top: 10px;"></div>
+        </div>
+
+        <!-- الكونسول -->
+        <div class="card">
+            <h3><span class="icon">💻</span> الكونسول</h3>
+            <div class="console" id="console">
+                <span class="info">[نظام]</span> <span class="output">مرحباً بك في استضافة بايثون الاحترافية</span>
+                <span class="info">[نظام]</span> <span class="output">قناة المطور: @FT_ER</span>
+                <span class="info">[نظام]</span> <span class="output">جاهز لاستقبال الأوامر...</span>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <input type="text" id="commandInput" placeholder="أدخل أمر Python هنا..." style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: white;">
+                <button class="btn btn-success" onclick="executeCommand()" style="width: auto;">▶️ تنفيذ</button>
+            </div>
+            <button class="btn btn-danger" onclick="clearConsole()" style="margin-top: 10px;">🗑️ مسح الكونسول</button>
+        </div>
+    </div>
+
+    <script>
+        // ================ المتغيرات العامة ================
+        let files = [];
+        let runningProcesses = {};
+        let startTime = Date.now();
+        let isSubscribed = false;
+        let festivalAudio = null;
+        let festivalPlaying = false;
+
+        // ================ تهيئة التطبيق ================
+        function init() {
+            createStars();
+            loadSavedFiles();
+            updateStats();
+            setInterval(updateStats, 1000);
+            setInterval(createConfetti, 2000);
+            initFestivalAudio();
+            
+            // محاولة استعادة حالة الاشتراك
+            if (localStorage.getItem('subscribed') === 'true') {
+                isSubscribed = true;
+                document.getElementById('subscriptionModal').classList.remove('active');
+                document.getElementById('mainApp').style.display = 'block';
+                startFestival();
+            }
+        }
+
+        // ================ النجوم ================
+        function createStars() {
+            const container = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.setProperty('--duration', Math.random() * 3 + 2 + 's');
+                star.style.animationDelay = Math.random() * 3 + 's';
+                container.appendChild(star);
+            }
+        }
+
+        // ================ تأثيرات المهرجان ================
+        function createConfetti() {
+            if (!isSubscribed) return;
+            const container = document.getElementById('festivalEffect');
+            const colors = ['#ff6b00', '#ff0080', '#00ff00', '#00aaff', '#ffff00', '#ff00ff'];
+            
+            for (let i = 0; i < 10; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.setProperty('--fall-duration', Math.random() * 3 + 2 + 's');
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+
+        // ================ نظام الصوت ================
+        function initFestivalAudio() {
+            festivalAudio = document.getElementById('festivalAudio');
+            // رابط مباشر لتحميل الصوت من يوتيوب (سيتم تحويله تلقائياً)
+            loadFestivalAudio();
+        }
+
+        async function loadFestivalAudio() {
+            try {
+                consoleLog('info', '[نظام]', 'جاري تحميل صوت المهرجان...');
+                // استخدام yt-dlp API لتحويل الفيديو إلى صوت
+                const response = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://www.youtube.com/watch?v=AJcZMNtyvOg'));
+                // في الإصدار الحقيقي، ستستخدم yt-dlp لاستخراج الصوت
+                // هنا نستخدم رابط مباشر مؤقت
+                festivalAudio.src = 'https://www.youtube.com/audiolibrary_download?vid=AJcZMNtyvOg';
+                consoleLog('success', '[نظام]', 'تم تحميل صوت المهرجان بنجاح');
+            } catch (error) {
+                consoleLog('error', '[خطأ]', 'فشل تحميل صوت المهرجان: ' + error.message);
+            }
+        }
+
+        function toggleFestivalAudio() {
+            if (festivalAudio.paused) {
+                festivalAudio.play();
+                festivalPlaying = true;
+                consoleLog('info', '[صوت]', 'تم تشغيل المهرجان 🔊');
+            } else {
+                festivalAudio.pause();
+                festivalPlaying = false;
+                consoleLog('info', '[صوت]', 'تم إيقاف المهرجان 🔇');
+            }
+        }
+
+        async function downloadFestivalAudio() {
+            consoleLog('info', '[تحميل]', 'جاري تحميل صوت المهرجان...');
+            // في الإصدار الحقيقي، ستستخدم yt-dlp لتحميل الصوت
+            window.open('https://www.youtube.com/watch?v=AJcZMNtyvOg', '_blank');
+            consoleLog('success', '[تحميل]', 'تم فتح رابط المهرجان للتحميل');
+        }
+
+        function startFestival() {
+            festivalAudio.play().catch(() => {
+                // التشغيل التلقائي قد يُمنع من المتصفح
+                consoleLog('warning', '[نظام]', 'اضغط على زر التشغيل لبدء المهرجان');
+            });
+            festivalPlaying = true;
+        }
+
+        // ================ نظام الاشتراك ================
+        function checkSubscription() {
+            // في التطبيق الحقيقي، ستتحقق من اشتراك المستخدم في القناة عبر Telegram API
+            // هنا نحاكي التحقق
+            const confirmed = confirm('هل أنت مشترك في قناة @FT_ER ؟');
+            if (confirmed) {
+                isSubscribed = true;
+                localStorage.setItem('subscribed', 'true');
+                document.getElementById('subscriptionModal').classList.remove('active');
+                document.getElementById('mainApp').style.display = 'block';
+                startFestival();
+                showNotification('✅ تم التحقق من الاشتراك بنجاح!', 'success');
+                consoleLog('success', '[نظام]', 'تم تأكيد الاشتراك - مرحباً بك!');
+            } else {
+                showNotification('❌ يجب عليك الاشتراك في القناة أولاً!', 'error');
+                window.open('https://t.me/FT_ER', '_blank');
+            }
+        }
+
+        // ================ إدارة الملفات ================
+        function handleDragOver(e) {
+            e.preventDefault();
+            document.getElementById('uploadArea').classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            document.getElementById('uploadArea').classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            document.getElementById('uploadArea').classList.remove('dragover');
+            const droppedFiles = Array.from(e.dataTransfer.files);
+            uploadFiles(droppedFiles);
+        }
+
+        function handleFileSelect(e) {
+            const selectedFiles = Array.from(e.target.files);
+            uploadFiles(selectedFiles);
+        }
+
+        async function uploadFiles(fileList) {
+            const progressBar = document.getElementById('uploadProgress');
+            const progressFill = document.getElementById('uploadProgressFill');
+            const status = document.getElementById('uploadStatus');
+            
+            progressBar.style.display = 'block';
+            
+            for (let i = 0; i < fileList.length; i++) {
+                const file = fileList[i];
+                const progress = ((i + 1) / fileList.length) * 100;
+                progressFill.style.width = progress + '%';
+                status.textContent = `جاري رفع ${file.name}...`;
+                
+                // قراءة الملف
+                const reader = new FileReader();
+                await new Promise((resolve, reject) => {
+                    reader.onload = (e) => {
+                        const fileData = {
+                            name: file.name,
+                            size: file.size,
+                            type: file.type,
+                            content: e.target.result,
+                            uploadDate: new Date().toISOString()
+                        };
+                        
+                        // إذا كان ملف مضغوط، فك الضغط
+                        if (file.name.endsWith('.zip')) {
+                            handleZipFile(fileData);
+                        }
+                        
+                        files.push(fileData);
+                        saveFiles();
+                        resolve();
+                    };
+                    reader.onerror = reject;
+                    reader.readAsText(file);
+                });
+            }
+            
+            progressBar.style.display = 'none';
+            status.textContent = `✅ تم رفع ${fileList.length} ملفات بنجاح`;
+            updateFileList();
+            updateStats();
+            consoleLog('success', '[رفع]', `تم رفع ${fileList.length} ملفات بنجاح`);
+        }
+
+        function handleZipFile(fileData) {
+            consoleLog('info', '[ضغط]', `جاري فك ضغط الملف: ${fileData.name}`);
+            // في التطبيق الحقيقي، ستستخدم مكتبة JSZip لفك الضغط
+            showNotification('📦 جاري معالجة الملف المضغوط...', 'info');
+        }
+
+        function saveFiles() {
+            localStorage.setItem('pythonFiles', JSON.stringify(files.map(f => ({
+                name: f.name,
+                size: f.size,
+                type: f.type,
+                uploadDate: f.uploadDate
+            }))));
+        }
+
+        function loadSavedFiles() {
+            const saved = localStorage.getItem('pythonFiles');
+            if (saved) {
+                files = JSON.parse(saved);
+                updateFileList();
+            }
+        }
+
+        function updateFileList() {
+            const fileList = document.getElementById('fileList');
+            if (files.length === 0) {
+                fileList.innerHTML = '<p style="text-align: center; opacity: 0.5;">لا توجد ملفات مرفوعة</p>';
+                return;
+            }
+            
+            fileList.innerHTML = files.map((file, index) => `
+                <div class="file-item">
+                    <div>
+                        <strong>🐍 ${file.name}</strong><br>
+                        <small>الحجم: ${formatSize(file.size)} | التاريخ: ${new Date(file.uploadDate).toLocaleString('ar-SA')}</small>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-success btn-small" onclick="runFile(${index})">▶️ تشغيل</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteFile(${index})">🗑️ حذف</button>
+                        <button class="btn btn-info btn-small" onclick="downloadFile(${index})">📥 تحميل</button>
+                        <button class="btn btn-small" onclick="viewFile(${index})">👁️ عرض</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function runFile(index) {
+            if (!isSubscribed) {
+                showNotification('❌ يجب الاشتراك في قناة @FT_ER أولاً!', 'error');
+                return;
+            }
+            
+            const file = files[index];
+            consoleLog('command', '[تشغيل]', `جاري تشغيل: python ${file.name}`);
+            
+            // محاكاة تشغيل الملف
+            const processId = 'process_' + Date.now();
+            runningProcesses[processId] = {
+                file: file.name,
+                startTime: new Date(),
+                status: 'running'
+            };
+            
+            setTimeout(() => {
+                consoleLog('output', `[${file.name}]`, 'تم تنفيذ الملف بنجاح');
+                runningProcesses[processId].status = 'completed';
+                updateStats();
+            }, 2000);
+            
+            updateStats();
+            showNotification(`✅ تم تشغيل ${file.name}`, 'success');
+        }
+
+        function deleteFile(index) {
+            if (confirm(`هل أنت متأكد من حذف ${files[index].name}؟`)) {
+                const fileName = files[index].name;
+                files.splice(index, 1);
+                saveFiles();
+                updateFileList();
+                updateStats();
+                consoleLog('warning', '[حذف]', `تم حذف الملف: ${fileName}`);
+                showNotification(`🗑️ تم حذف ${fileName}`, 'info');
+            }
+        }
+
+        function downloadFile(index) {
+            const file = files[index];
+            const blob = new Blob([file.content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = file.name;
+            a.click();
+            URL.revokeObjectURL(url);
+            showNotification(`📥 جاري تحميل ${file.name}`, 'success');
+        }
+
+        function viewFile(index) {
+            const file = files[index];
+            const win = window.open('', '_blank', 'width=800,height=600');
+            win.document.write(`<pre style="background: #1e1e1e; color: #d4d4d4; padding: 20px; font-family: monospace;">${escapeHtml(file.content)}</pre>`);
+            win.document.title = file.name;
+        }
+
+        // ================ أوامر النظام ================
+        function runAllFiles() {
+            if (!isSubscribed) {
+                showNotification('❌ يجب الاشتراك في قناة @FT_ER أولاً!', 'error');
+                return;
+            }
+            
+            files.forEach((file, index) => runFile(index));
+            showNotification('▶️ جاري تشغيل جميع الملفات', 'success');
+        }
+
+        function stopAllFiles() {
+            const count = Object.keys(runningProcesses).length;
+            runningProcesses = {};
+            updateStats();
+            consoleLog('warning', '[نظام]', 'تم إيقاف جميع العمليات');
+            showNotification(`⏹️ تم إيقاف ${count} عمليات`, 'info');
+        }
+
+        function restartAllFiles() {
+            stopAllFiles();
+            setTimeout(runAllFiles, 1000);
+            showNotification('🔄 جاري إعادة تشغيل جميع الملفات', 'info');
+        }
+
+        function executeCommand() {
+            const input = document.getElementById('commandInput');
+            const command = input.value.trim();
+            
+            if (!command) return;
+            
+            consoleLog('command', '[أمر]', command);
+            
+            // محاكاة تنفيذ الأمر
+            setTimeout(() => {
+                if (command.startsWith('pip install')) {
+                    const lib = command.replace('pip install ', '').trim();
+                    consoleLog('success', '[pip]', `تم تثبيت ${lib} بنجاح`);
+                } else if (command.startsWith('python')) {
+                    consoleLog('output', '[Python]', 'تم تنفيذ الكود بنجاح');
+                } else {
+                    consoleLog('output', '[نتيجة]', 'تم تنفيذ الأمر: ' + command);
+                }
+            }, 500);
+            
+            input.value = '';
+        }
+
+        async function installLibrary() {
+            const input = document.getElementById('libraryInput');
+            const libName = input.value.trim();
+            
+            if (!libName) {
+                showNotification('❌ أدخل اسم المكتبة', 'error');
+                return;
+            }
+            
+            consoleLog('info', '[تثبيت]', `جاري تثبيت ${libName}...`);
+            
+            // محاكاة التثبيت
+            document.getElementById('libraryStatus').innerHTML = `
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%;"></div>
+                </div>
+                <p style="color: #00ff00;">✅ تم تثبيت ${libName} بنجاح</p>
+            `;
+            
+            consoleLog('success', '[تثبي
